@@ -1,0 +1,52 @@
+ bgenerator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   // "PATIENT", "DOCTOR", "ADMIN"
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  patientAppointments Appointment[] @relation("PatientAppointments")
+  doctorAppointments  Appointment[] @relation("DoctorAppointments")
+  schedules           DoctorSchedule[]
+}
+
+model Appointment {
+  id        String   @id @default(uuid())
+  date      DateTime
+  time      String   // e.g., "10:00 AM"
+  status    String   @default("PENDING") // "PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  patientId String
+  patient   User @relation("PatientAppointments", fields: [patientId], references: [id])
+  
+  doctorId  String
+  doctor    User @relation("DoctorAppointments", fields: [doctorId], references: [id])
+}
+
+model DoctorSchedule {
+  id          String   @id @default(uuid())
+  dayOfWeek   Int      // 0 (Sun) to 6 (Sat)
+  startTime   String   // e.g., "09:00"
+  endTime     String   // e.g., "17:00"
+  
+  // Relationships
+  doctorId    String
+  doctor      User @relation(fields: [doctorId], references: [id])
+}
