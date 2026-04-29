@@ -20,8 +20,8 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const [docsRes, aptsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/doctors'),
-          axios.get('http://localhost:5000/api/appointments', {
+          axios.get(`${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}`}/doctors`),
+          axios.get(`${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}`}/appointments`, {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
@@ -61,7 +61,7 @@ const Dashboard = () => {
     }
     
     try {
-      const res = await axios.post('http://localhost:5000/api/appointments', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}`}/appointments`, {
         doctor: newBooking.doctorId,
         date: newBooking.date,
         startTime: newBooking.time,

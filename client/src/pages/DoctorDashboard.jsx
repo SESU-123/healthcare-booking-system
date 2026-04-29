@@ -20,12 +20,12 @@ const DoctorDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         // Fetch doctor profile to get specialization
-        const docsRes = await axios.get('http://localhost:5000/api/doctors');
+        const docsRes = await axios.get(`${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}`}/doctors`);
         const myProfile = docsRes.data.data.find(d => d.user?._id === user.id || d.user === user.id);
         setDoctorProfile(myProfile);
 
         // Fetch doctor's appointments
-        const aptRes = await axios.get('http://localhost:5000/api/appointments', {
+        const aptRes = await axios.get(`${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}`}/appointments`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAppointments(aptRes.data.data);
@@ -72,7 +72,7 @@ const DoctorDashboard = () => {
         newAvailability.push({ day: availDay, slots: [newSlot] });
       }
 
-      const res = await axios.put(`http://localhost:5000/api/doctors/${doctorProfile._id}`, 
+      const res = await axios.put(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/doctors/${doctorProfile._id}`, 
         { availability: newAvailability },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -85,7 +85,7 @@ const DoctorDashboard = () => {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/appointments/${id}`, 
+      await axios.put(`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/appointments/${id}`, 
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );

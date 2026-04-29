@@ -12,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/doctors');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}`}/doctors`);
         setDoctors(res.data.data);
       } catch (err) {
         console.error('Error fetching doctors:', err);
